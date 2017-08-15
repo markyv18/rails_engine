@@ -9,6 +9,7 @@ end
 gem 'rails', '~> 5.0.4'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
+# gem 'active_model_serializer', '~> 0.10.0'
 
 group :test do
   gem 'database_cleaner'

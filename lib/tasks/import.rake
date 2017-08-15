@@ -22,6 +22,7 @@ namespace :db do
       CSV.foreach('db/csv/merchants.csv', headers: true) do |row|
         Merchant.create!(row.to_hash)
       end
+      puts "Merchants Complete"
     end
 
     desc "import customers from csv"
@@ -29,6 +30,7 @@ namespace :db do
       CSV.foreach('db/csv/customers.csv', headers: true) do |row|
         Customer.create!(row.to_hash)
       end
+      puts "Customers Complete"
     end
 
     desc "import invoices from csv"
@@ -42,6 +44,7 @@ namespace :db do
                         updated_at: row[:updated_at]
                         )
       end
+      puts "Invoices Complete"
     end
     #
     desc "import transactions from csv"
@@ -56,6 +59,7 @@ namespace :db do
                         updated_at: row[:updated_at]
                         )
       end
+      puts "Transactions Complete"
     end
 
     desc "import items from csv"
@@ -70,6 +74,7 @@ namespace :db do
                         updated_at: row[:updated_at]
                         )
       end
+      puts "Items Complete"
     end
 
     desc "import invoice items from csv"
@@ -84,6 +89,7 @@ namespace :db do
                         updated_at: row[:updated_at]
                         )
       end
+      puts "Invoice Items Complete"
     end
   end
 end

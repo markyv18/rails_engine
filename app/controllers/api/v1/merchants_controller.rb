@@ -20,6 +20,10 @@ class Api::V1::MerchantsController < ApplicationController
     render json: Merchant.destroy(params[:id])
   end
 
+  def revenue
+    render json: Merchant.where(id: params[:id])
+  end
+
   private
 
   def merchant_params
