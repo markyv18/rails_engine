@@ -25,18 +25,19 @@ describe "Customers API" do
   end
 
   it "can create a new customer" do
-    customer_params = {name: "Harry Boots"}
+    customer_params = {first_name: "Harry", last_name: "Boots"}
 
     post "/api/v1/customers", params: {customer: customer_params}
     customer = Customer.last
 
     expect(response).to be_success
-    expect(customer.name).to eq(customer_params[:name])
+    expect(customer.first_name).to eq(customer_params[:first_name])
+    expect(customer.last_name).to eq(customer_params[:last_name])
   end
 
   it "can update an existing customer" do
     single_customer = create(:customer)
-    customer_params = {name: "Harry Boots"}
+    customer_params = {first_name: "Harry", last_name: "Boots"}
 
     put "/api/v1/customers/#{single_customer.id}", params: {customer: customer_params}
     customer = Customer.find_by(id: single_customer.id)
