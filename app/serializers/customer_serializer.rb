@@ -1,5 +1,4 @@
 class CustomerSerializer < ActiveModel::Serializer
-  # has_many :invoices
 
   attributes :id,
               :first_name,
