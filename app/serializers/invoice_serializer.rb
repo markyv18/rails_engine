@@ -1,6 +1,5 @@
 class InvoiceSerializer < ActiveModel::Serializer
-  has_many :transactions
-  attributes :id, :status, :merchant_name, :customer_name
+  attributes :id, :status, :merchant_id, :customer_id
 
   def merchant_name
     (Merchant.find(object.merchant_id)).name

@@ -24,46 +24,136 @@ describe "Transactions API" do
     expect(transaction["id"]).to eq(transaction_id)
   end
 
-  it "can create a new transaction" do
-    customer = create(:customer)
-    merchant = create(:merchant)
-    invoice = Invoice.create(id: 5, customer_id: customer.id, merchant_id: merchant.id)
-    transaction_params = {invoice_id: invoice.id, credit_card_num: "1234567890", result: "success"}
+  it "can get a single transaction by its id" do
+    transaction_id = create(:transaction)
 
-    post "/api/v1/transactions", params: {transaction: transaction_params}
+    get "/api/v1/transactions/#{transaction_id.id}"
+
+    transaction = JSON.parse(response.body)
+
     expect(response).to be_success
-    transaction = Transaction.last
-
-    expect(transaction.id).to eq(transaction_params[:invoice_id])
-    expect(transaction.credit_card_num).to eq(transaction_params[:credit_card_num])
-    expect(transaction.result).to eq(transaction_params[:result])
+    expect(transaction["id"]).to eq(transaction_id.id)
   end
 
-  it "can update an existing transaction" do
-    customer = create(:customer)
-    merchant = create(:merchant)
-    invoice = Invoice.create(id: 6, customer_id: customer.id, merchant_id: merchant.id)
-    transaction_params = {invoice_id: 6, credit_card_num: "1234567890", result: "success"}
-    single_transaction = create(:transaction)
+  it 'can find a transaction by id' do
+    create :transaction, id: 1
+    get '/api/v1/transactions/find?id=1'
 
-    put "/api/v1/transactions/#{single_transaction.id}", params: {transaction: transaction_params}
-    transaction = Transaction.find_by(id: single_transaction.id)
+    expected = JSON.parse(response.body)
 
-    expect(response).to be_success
-    expect(transaction.id).to eq(transaction_params[:invoice_id])
-    expect(transaction.credit_card_num).to eq(transaction_params[:credit_card_num])
-    expect(transaction.result).to eq(transaction_params[:result])
+    expect(expected['id']).to eq(1)
   end
 
-  it "can destroy an transaction" do
-    transaction = create(:transaction)
+  it 'can find a transaction by invoice id' do
+    invoice = create(:invoice)
+    create :transaction, invoice_id: "#{invoice.id}"
+    get '/api/v1/transactions/find?invoice_id=' + invoice.id.to_s
 
-    expect(Transaction.count).to eq(1)
+    result = JSON.parse(response.body)
 
-    delete "/api/v1/transactions/#{transaction.id}"
+    expect(result['invoice_id']).to eq invoice.id
+  end
+
+  it 'can find a transaction by created_at' do
+    time = "2012-03-27 14:54:09"
+    create :transaction, created_at: time
+    get '/api/v1/transactions/find?created_at=' + time.to_s
+
+    result = JSON.parse(response.body)
+    new_transaction = Transaction.find(result['id'])
+
+    expect(new_transaction.created_at).to eq(time)
+  end
+
+  it 'can find a transaction by updated_at' do
+    time = "2012-03-27 14:54:09"
+    create :transaction, updated_at: time
+    get '/api/v1/transactions/find?updated_at=' + time.to_s
+
+    result = JSON.parse(response.body)
+    new_transaction = Transaction.find(result['id'])
+
+    expect(new_transaction.updated_at).to eq(time)
+  end
+
+  it 'can find a random transaction' do
+    transaction1 = create :transaction
+    transaction2 = create :transaction
+    get '/api/v1/transactions/random'
 
     expect(response).to be_success
-    expect(Transaction.count).to eq(0)
-    expect{Transaction.find(transaction.id)}.to raise_error(ActiveRecord::RecordNotFound)
+
+    response_transaction = JSON.parse(response.body)
+
+    if response_transaction['id'] == transaction1.id
+      expect(response_transaction['invoice_id']).to eq(transaction1.invoice_id)
+    elsif response_transaction['id'] == transaction2.id
+      expect(response_transaction['invoice_id']).to eq(transaction2.invoice_id)
+    else
+      expect('uh oh').to eq('This should not happen')
+    end
+  end
+
+  it 'can find all transactions by id' do
+    create :transaction, id: 1
+    create :transaction, id: 2
+
+    get '/api/v1/transactions/find_all?id=1'
+
+    result = JSON.parse(response.body)
+    expect(result[0]['id']).to eq 1
+    expect(result.count).to eq 1
+  end
+
+  it 'can find all transactions by invoice_id' do
+    invoice = create(:invoice)
+    create :transaction, invoice_id: invoice.id
+    create :transaction, invoice_id: invoice.id
+    create :transaction
+
+    get '/api/v1/transactions/find_all?invoice_id=' + invoice.id.to_s
+
+    result = JSON.parse(response.body)
+    expect(result[0]['invoice_id']).to eq invoice.id
+    expect(result[1]['invoice_id']).to eq invoice.id
+    expect(result.count).to eq 2
+  end
+
+  it 'can find all transactions by created_at' do
+    time = "2012-03-27 14:54:09"
+    time_two = "2012-03-27 15:54:09"
+    create :transaction, created_at: time
+    create :transaction, created_at: time
+    create :transaction, created_at: time_two
+
+    get '/api/v1/transactions/find_all?created_at=' + time.to_s
+
+    result = JSON.parse(response.body)
+    transactions = result.map do |transaction|
+      Transaction.find(transaction['id'])
+    end
+
+    expect(transactions[0]['created_at']).to eq time
+    expect(transactions[1]['created_at']).to eq time
+    expect(transactions.count).to eq 2
+  end
+
+  it 'can find all transactions by updated_at' do
+    time = "2012-03-27 14:54:09"
+    time_two = "2012-03-27 15:54:09"
+    create :transaction, updated_at: time
+    create :transaction, updated_at: time
+    create :transaction, updated_at: time_two
+
+    get '/api/v1/transactions/find_all?updated_at=' + time.to_s
+
+    result = JSON.parse(response.body)
+    transactions = result.map do |transaction|
+      Transaction.find(transaction['id'])
+    end
+
+    expect(transactions[0]['updated_at']).to eq time
+    expect(transactions[1]['updated_at']).to eq time
+    expect(transactions.count).to eq 2
   end
 end

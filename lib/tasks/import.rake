@@ -52,7 +52,7 @@ namespace :db do
       CSV.foreach('db/csv/transactions.csv', headers: true, header_converters: :symbol) do |row|
         Transaction.create!(
                         invoice_id: row[:invoice_id],
-                        credit_card_num: row[:credit_card_num],
+                        credit_card_number: row[:credit_card_number].to_s,
                         credit_card_expiration_date: row[:credit_card_expiration_date],
                         result: row[:result],
                         created_at: row[:created_at],

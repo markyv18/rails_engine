@@ -1,6 +1,5 @@
 class Transaction < ApplicationRecord
   belongs_to :invoice
-  enum result: [:failed, :success]
 
   def self.random_transaction
     self.all.select(:id).sample
