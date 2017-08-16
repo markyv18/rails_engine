@@ -14,14 +14,14 @@ describe "Customers API" do
   end
 
   it "can get a single customer by its id" do
-    customer_id = create(:customer).id
+    customer_id = create(:customer)
 
-    get "/api/v1/customers/#{customer_id}"
+    get "/api/v1/customers/#{customer_id.id}"
 
     customer = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(customer["id"]).to eq(customer_id)
+    expect(customer["name"]).to eq(customer_id.name)
   end
 
   it "can create a new customer" do

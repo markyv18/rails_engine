@@ -21,7 +21,7 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def revenue
-    render json: Merchant.where(id: params[:id])
+    render json: Merchant.find(params[:id])
   end
 
   private
