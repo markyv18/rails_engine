@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      namespace :invoices do
+        get '/:id/transactions', to: 'transactions#index'
+        get '/:id/merchant', to: 'merchants#index'
+        get '/:id/items', to: 'items#index'
+        get '/:id/customer', to: 'customers#index'
+        get '/:id/invoice_items', to: 'invoice_items#index'
+      end
+
       namespace :items do
         get '/:id/invoice_items', to: 'invoice_items#show'
         get '/:id/merchant', to: 'merchants#show'
