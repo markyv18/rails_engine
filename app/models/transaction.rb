@@ -3,13 +3,9 @@ class Transaction < ApplicationRecord
 
   scope :successful, -> { where(result: 'success') }
 
-
-  def self.random_transaction
-    self.all.select(:id).sample
-  end
-
   def self.random
-    self.find(random_transaction)
+    order("RANDOM()").first
   end
+
 
 end

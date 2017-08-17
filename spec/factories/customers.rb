@@ -1,10 +1,7 @@
+
 FactoryGirl.define do
   factory :customer do
-    sequence :first_name do |t|
-      "#{t} first-name"
-    end
-    sequence :last_name do |t|
-      "#{t} last-name"
-    end
+    first_name {Faker::Name.first_name}
+    last_name {Faker::Name.last_name}
   end
 end

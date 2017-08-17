@@ -1,10 +1,4 @@
 require 'CSV'
-# Merchant.destroy
-# Customer.destroy_all
-# Transaction.destroy_all
-# Item.destroy_all
-# InvoiceItem.destroy_all
-# Invoice.destroy_all
 
 namespace :db do
   namespace :import do
@@ -17,7 +11,7 @@ namespace :db do
                       :import_invoice_items
                     ]
 
-    desc "import merchants from csv"
+    desc "import merchants"
     task import_merchants: :environment do
       CSV.foreach('db/csv/merchants.csv', headers: true) do |row|
         Merchant.create!(row.to_hash)
@@ -25,7 +19,7 @@ namespace :db do
       puts "Merchants Complete"
     end
 
-    desc "import customers from csv"
+    desc "import customers"
     task import_customers: :environment do
       CSV.foreach('db/csv/customers.csv', headers: true) do |row|
         Customer.create!(row.to_hash)
@@ -33,7 +27,7 @@ namespace :db do
       puts "Customers Complete"
     end
 
-    desc "import invoices from csv"
+    desc "import invoices"
     task import_invoices: :environment do
       CSV.foreach('db/csv/invoices.csv', headers: true, header_converters: :symbol) do |row|
         Invoice.create!(
@@ -47,7 +41,7 @@ namespace :db do
       puts "Invoices Complete"
     end
     #
-    desc "import transactions from csv"
+    desc "import transactions"
     task import_transactions: :environment do
       CSV.foreach('db/csv/transactions.csv', headers: true, header_converters: :symbol) do |row|
         Transaction.create!(
@@ -62,7 +56,7 @@ namespace :db do
       puts "Transactions Complete"
     end
 
-    desc "import items from csv"
+    desc "import items"
     task import_items: :environment do
       CSV.foreach('db/csv/items.csv', headers: true, header_converters: :symbol) do |row|
         Item.create!(
@@ -77,7 +71,7 @@ namespace :db do
       puts "Items Complete"
     end
 
-    desc "import invoice items from csv"
+    desc "import invoice items"
     task import_invoice_items: :environment do
       CSV.foreach('db/csv/invoice_items.csv', headers: true, header_converters: :symbol) do |row|
         InvoiceItem.create!(

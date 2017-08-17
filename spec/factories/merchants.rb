@@ -1,7 +1,7 @@
+require 'faker'
+
 FactoryGirl.define do
   factory :merchant do
-    sequence :name do |t|
-      "#{t} name"
-    end
+    name {Faker::Company.name}
   end
 end

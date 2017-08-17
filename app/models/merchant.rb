@@ -5,11 +5,7 @@ class Merchant < ApplicationRecord
   has_many :invoice_items, through: :invoices
   has_many :customers, through: :invoices
 
-  def self.random_merchant
-    self.all.select(:id).sample
-  end
-
   def self.random
-    self.find(random_merchant)
+    order("RANDOM()").first
   end
 end
