@@ -6,8 +6,8 @@ Rails.application.routes.draw do
         get '/find_all', to: 'find#index'
         get '/random', to: 'random#show'
         # get '/merchants/:id/revenue', to: 'revenue#show'
-        get '/:id/items', to: 'merchant_items#index'
-        get '/:id/invoices', to: 'merchant_invoices#index'
+        get '/:id/items', to: 'items#index'
+        get '/:id/invoices', to: 'invoices#index'
       end
 
       namespace :customers do
@@ -20,10 +20,11 @@ Rails.application.routes.draw do
         get '/find', to: 'find#show'
         get '/find_all', to: 'find#index'
         get '/random', to: 'random#show'
+        get '/:id/invoices', to: 'invoices#index'
+        get '/:id/invoice',  to: 'invoices#index'
       end
 
-      resources :merchants, only: [:index, :show] do
-      end
+      resources :merchants, only: [:index, :show]
       resources :customers, only: [:index, :show]
       resources :transactions, only: [:index, :show]
     end
