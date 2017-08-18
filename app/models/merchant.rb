@@ -24,4 +24,17 @@ class Merchant < ApplicationRecord
     #   .select('merchants.*, SUM(unit_price * quantity) as revenue')
     #   .order('revenue desc').limit(top_x)
   end
+
+  def self.most_items_sold(top_x)
+    self.find_by_sql("SELECT  m.*, SUM(quantity) as items_sold
+    FROM merchants m
+    INNER JOIN items i ON i.merchant_id = m.id
+    INNER JOIN invoices inv ON inv.merchant_id = m.id
+    INNER JOIN invoice_items ii ON ii.invoice_id = inv.id
+    INNER JOIN transactions t ON i.id = t.invoice_id
+    WHERE t.result = 'success'
+    GROUP BY m.id
+    ORDER BY items_sold
+    desc LIMIT #{top_x};")
+  end
 end

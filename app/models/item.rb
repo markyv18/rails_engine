@@ -8,6 +8,7 @@ class Item < ApplicationRecord
     order("RANDOM()").first
   end
 
+
   def self.most_revenue(top_x = 5)
     self.find_by_sql("SELECT items.*, sum(invoice_items.quantity * invoice_items.unit_price) as revenue
                       FROM items

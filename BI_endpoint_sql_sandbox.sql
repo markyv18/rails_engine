@@ -57,7 +57,8 @@ FROM merchants m
 INNER JOIN invoices i ON i.merchant_id = m.id
 INNER JOIN invoices invoices_merchants_join ON invoices_merchants_join.merchant_id = m.id
 INNER JOIN invoice_items ON invoice_items.invoice_id = invoices_merchants_join.id
-WHERE i.status = 'shipped'
+INNER JOIN transactions t ON i.id = t.invoice_id
+WHERE t.result = 'success'
 GROUP BY m.id
 ORDER BY revenue
 desc LIMIT
@@ -65,3 +66,31 @@ desc LIMIT
 Merchant.joins(:invoices, :invoice_items)
   .group(:id).select(:id, 'SUM(unit_price * quantity) as revenue')
   .order('revenue desc')
+
+--------------------------------------------------------------------------------
+
+SELECT  m.id, SUM(quantity) as items_sold
+FROM merchants m
+INNER JOIN items i ON i.merchant_id = m.id
+INNER JOIN invoices inv ON inv.merchant_id = m.id
+INNER JOIN invoice_items ii ON ii.invoice_id = inv.id
+INNER JOIN transactions t ON i.id = t.invoice_id
+WHERE t.result = 'success'
+GROUP BY m.id
+ORDER BY items_sold
+desc LIMIT
+
+--------------------------------------------------------------------------------
+GET /api/v1/merchants/revenue?date=x
+returns the total revenue for date x across all merchants
+
+SELECT  m.*, SUM(unit_price * quantity) as items_sold
+FROM merchants m
+INNER JOIN items i ON i.merchant_id = m.id
+INNER JOIN invoices inv ON inv.merchant_id = m.id
+INNER JOIN invoice_items ii ON ii.invoice_id = inv.id
+INNER JOIN transactions t ON i.id = t.invoice_id
+WHERE t.result = 'success'
+GROUP BY m.id
+ORDER BY items_sold
+desc LIMIT
