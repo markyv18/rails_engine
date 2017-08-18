@@ -1,6 +1,7 @@
 class Api::V1::Items::FindController < ApplicationController
 
   def index
+    strong_params[:unit_price].to_f if strong_params[:unit_price]
     render json: Item.where(strong_params)
     end
 

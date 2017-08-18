@@ -10,7 +10,7 @@ GROUP BY items.id
 ORDER BY revenue DESC
 LIMIT 10
 
----------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 GET /api/v1/items/most_items?quantity=x
 returns the top x item ranked by total number sold
 
@@ -24,7 +24,7 @@ ORDER BY top_sold DESC
 LIMIT 10
 
 
----------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 GET /api/v1/items/:id/best_day
 returns the date with the most sales for the given item using the invoice date.
 
@@ -38,3 +38,30 @@ WHERE items.id = #{id}
 GROUP BY invoices.id
 ORDER BY top_sold DESC
 LIMIT 10
+
+--------------------------------------------------------------------------------
+GET /api/v1/merchants/most_revenue?quantity=x
+returns the top x merchants ranked by total revenue
+
+SELECT m.*, SUM(ii.quantity * ii.unit_price) AS revenue
+FROM merchants m
+INNER JOIN invoice_items ii ON m.id = ii.invoice_id
+INNER JOIN invoices i ON i.id = ii.item_id
+INNER JOIN transactions t ON i.id = t.invoice_id
+GROUP BY m.id
+ORDER BY revenue DESC
+LIMIT 10
+
+SELECT  m.id, SUM(unit_price * quantity) as revenue
+FROM merchants m
+INNER JOIN invoices i ON i.merchant_id = m.id
+INNER JOIN invoices invoices_merchants_join ON invoices_merchants_join.merchant_id = m.id
+INNER JOIN invoice_items ON invoice_items.invoice_id = invoices_merchants_join.id
+WHERE i.status = 'shipped'
+GROUP BY m.id
+ORDER BY revenue
+desc LIMIT
+
+Merchant.joins(:invoices, :invoice_items)
+  .group(:id).select(:id, 'SUM(unit_price * quantity) as revenue')
+  .order('revenue desc')
