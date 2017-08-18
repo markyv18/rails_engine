@@ -35,10 +35,13 @@ Rails.application.routes.draw do
         get '/find', to: 'find#show'
         get '/find_all', to: 'find#index'
         get '/random', to: 'random#show'
-        # get '/merchants/:id/revenue', to: 'revenue#show'
+        get '/:id/revenue', to: 'revenue#show'
         get '/:id/items', to: 'items#index'
         get '/:id/invoices', to: 'invoices#index'
         get '/:id/revenue', to: 'revenue#show'
+        get '/most_revenue', to: 'most#index'
+        get '/most_items', to: 'most#show'
+
       end
 
       namespace :customers do
