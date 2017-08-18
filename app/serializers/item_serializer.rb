@@ -4,4 +4,8 @@ class ItemSerializer < ActiveModel::Serializer
              :description,
              :unit_price,
              :merchant_id
+
+ def unit_price
+   (object.unit_price).to_s
+ end
 end

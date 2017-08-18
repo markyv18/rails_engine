@@ -9,8 +9,6 @@ class Merchant < ApplicationRecord
     order("RANDOM()").first
   end
 
-
-
   def self.total_merchant_revenue(id)
     self.find_by_sql("SELECT merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) AS revenue
                       FROM merchants
