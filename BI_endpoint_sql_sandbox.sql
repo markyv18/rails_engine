@@ -38,3 +38,31 @@ WHERE items.id = #{id}
 GROUP BY invoices.id
 ORDER BY top_sold DESC
 LIMIT 10
+
+
+---------------------------------------------------------------------------
+GET /api/v1/merchants/:id/revenue
+returns the total revenue for that merchant across successful transactions
+
+SELECT merchants.id, sum(invoice_items.quantity * invoice_items.unit_price) AS revenue
+FROM merchants
+INNER JOIN invoices ON merchants.id = invoices.merchant_id
+INNER JOIN transactions ON transactions.invoice_id = invoices.id
+INNER JOIN invoice_items ON invoices.id = invoice_items.invoice_id
+WHERE merchants.id = #{id}
+AND transactions.result = 'success'
+GROUP BY merchants.id
+
+---------------------------------------------------------------------------
+GET /api/v1/merchants/:id/favorite_customer
+returns the customer who has conducted the most total number of successful transactions.
+pass in a merchant's id and return that merchant's highest successful transaction customer
+
+SELECT merchants.*
+FROM customers
+INNER JOIN invoices ON invoices.customer_id = customers.id
+INNER JOIN merchants ON merchants.id = invoices.merchant_id
+WHERE customers.id = #{customer_id}
+GROUP BY merchants.id
+ORDER BY count(merchants.id) DESC
+LIMIT 1
