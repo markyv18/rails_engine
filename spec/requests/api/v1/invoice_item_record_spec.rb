@@ -170,7 +170,7 @@ describe "Invoice items API can..." do
       expect(results.count).to eq(3)
 
       results.each do |result|
-        expect(result[:unit_price]).to eq(52)
+        expect(result[:unit_price]).to eq("0.52")
       end
     end
 

@@ -5,7 +5,7 @@ class ItemSerializer < ActiveModel::Serializer
              :unit_price,
              :merchant_id
 
-  def unit_price_dollars
-    object.unit_price / 100
+  def unit_price
+    object.unit_price.to_s
   end
 end
