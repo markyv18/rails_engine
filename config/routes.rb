@@ -38,6 +38,7 @@ Rails.application.routes.draw do
         # get '/merchants/:id/revenue', to: 'revenue#show'
         get '/:id/items', to: 'items#index'
         get '/:id/invoices', to: 'invoices#index'
+        get '/:id/revenue', to: 'revenue#show'
       end
 
       namespace :customers do
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
         get '/:id/invoices', to: 'invoices#index'
         get '/:id/transactions', to: 'transactions#index'
         get '/:id/favorite_merchant', to: 'merchants#show'
+        # get '/:id/favorite_customer', to: 'favorite_customer#show'
       end
 
       namespace :transactions do
